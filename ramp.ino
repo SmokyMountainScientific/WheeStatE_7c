@@ -8,13 +8,47 @@
 
 void ramp()  {
 
-  ////////// Plating /////////////////////////////////////////////////  
+    int nThru = 1;    // number of times through the 
+  if (mode == CV){
+    nThru = 2;
+  }
+  if (mode == multiCV){
+    nThru = runs*2;
+  }
+  int start;
+  boolean slopeDir = 0;   // initially slope is assumed negative
+  boolean evenOdd = 0;    // keeps track of where to start 
+  if (dInit<dFnl) {
+  slopeDir = 1;           // slopeDir = 1 if positive slope
+  }
+////////// Plating /////////////////////////////////////////////////  
  
   digitalWrite(pulse_pin,LOW);              // set pulse pin to low
   PWMWrite(signal_pin,pwmRes,dInit,pwmClock);  // set signal voltage to 512 + 1/2 Vinit
 
   delay(delay1*1000);
-  if (dInit<dFnl) {
+
+  
+  for(int p = 0; p<nThru; p++){
+    if(evenOdd == 0){
+    start = dInit;
+    }
+    else{
+      start = dFnl;
+    }
+      if (slopeDir == 1) {
+    pRamp(start);
+  }
+  else {
+    nRamp(start);
+  }
+  slopeDir =! slopeDir;   // toggle slopeDir
+  evenOdd =! evenOdd;
+  }
+
+  openCircuit();    // go to open circuit
+}
+/*  if (dInit<dFnl) {
     pRamp(dInit);
   }
   else {
@@ -29,7 +63,7 @@ void ramp()  {
     }
   }
   openCircuit();    // go to open circuit
-}
+}*/
 ///////// Ramping ////////////////////////////////////////////////
 void pRamp(int start)  {
  //  if (runState == true){

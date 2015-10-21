@@ -5,14 +5,10 @@
 //   Files saved as csv format
 //    version 5.4c;  +400 mV cleaning for mercury film electrodes
 //                   -900 mV deposition voltage
-//    worked on open circuit tab
-//    one and two step chronoamperometry experiments working
-//    normal pulse voltammetry working
-//    voltage subtraction for current zero
+//    Version E_7c:  Oct 16, 2015
+//        changed sign on current to meet standards
+//        multi-run CV experiment appears to be working
 //    Status command;  when % transmitted by GUI, experiment stopped and board reset
-//    Measured mV output between working and ref electrodes; 0.966*mV set - 14.3
-//    Setup begins on ~line 111
-//    Loop begins on ~line 127
 
 
 #include<Energia.h>           //need this for SPI to work
@@ -69,6 +65,7 @@ int diff_Pulse = 4;
 int chronoAmp = 5;    // chronoamperometry
 int chronoAmp2 = 6;    // two step chronoamperometry
 int normalPulse = 7;  // normal pulse voltammetry
+int multiCV = 8;      // multiple loop CV
 int mode;
 
 ///////////// current gain parameters ///////////////////
@@ -144,7 +141,7 @@ void loop (){
    PWMWrite(offset_pin,pwmRes,halfRes,pwmClock);  // sets current offset, changed from dOff to halfRes
 
 ///////////  Ramp and CV experiments  ////////////////////
-  if (mode == RAMP || mode == CV) {
+  if (mode == RAMP || mode == CV || mode == multiCV) {
     ramp();  
     stop(3);   // executes stop command and 3 following zero transmits
    }

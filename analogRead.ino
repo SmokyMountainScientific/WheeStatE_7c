@@ -28,15 +28,15 @@ void readCurrent(boolean printI) {
 
   mVi = iRead/16;
   if (gotLims == false){
-    iMax = mVi-2048;
-    iMin = mVi-2048;
+    iMax = 2048-mVi;  //-2048;
+    iMin = 2048-mVi;  //-2048;
     gotLims = true;
   }
-  if(mVi >= iMax+2048) {
-   iMax = mVi-2048; 
+  if(mVi >= 2048-iMin){  //+2048) {
+   iMin = 2048-mVi;  //-2048; 
   }
-  if(mVi <= iMin+2048) {
-    iMin = mVi-2048;
+  if(mVi <= 2048-iMax){   //+2048) {
+    iMax = 2048-mVi;  //-2048;
   }
 
  // float cor1 = 0.4253*amplif + 1.2866;
@@ -47,7 +47,7 @@ void readCurrent(boolean printI) {
     // check for problem with digital pot by commenting out next three lines
   mVi = res5/res6*mVi/res4;
   float off2 = (165-dOff)*vcc/330/res4;
-  mVi = (mVi -off2)*1000;  // JS-problem with digitization of floats fixed by 1000 fold increase. 
+  mVi = (-mVi +off2)*1000;  // JS-problem with digitization of floats fixed by 1000 fold increase. 
 
 //  mVi = 1000* mVi;  // put in with problem check
     // end of test for digital pot function
